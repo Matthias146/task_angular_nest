@@ -16,11 +16,15 @@ import type { Request } from 'express';
 import { UserRole } from '../users/entity/user.entity';
 import { OptionalJwtAuthGuard } from './jwt/optional-jwt.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { UsersService } from '../users/users.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @UseGuards(OptionalJwtAuthGuard)
   @Post('register')
@@ -70,6 +74,7 @@ export class AuthController {
   @ApiBearerAuth('JWT-auth')
   @Get('me')
   getProfile(@Req() req: Request) {
-    return req.user;
+    const user = req.user as { userId: number; email: string; role: UserRole };
+    return this.usersService.findOne(user.userId);
   }
 }
