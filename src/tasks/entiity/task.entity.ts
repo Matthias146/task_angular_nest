@@ -1,6 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from '../../users/entity/user.entity';
 
+export type TaskStatus = 'todo' | 'in-progress' | 'done';
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn()
@@ -9,12 +17,21 @@ export class Task {
   @Column()
   title: string;
 
-  @Column({ default: '' })
-  description: string;
+  @Column({ nullable: true })
+  description?: string;
 
-  @Column({ default: false })
-  completed: boolean;
+  @Column({
+    type: 'text',
+    default: 'todo',
+  })
+  status: TaskStatus;
 
   @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'CASCADE' })
   user: User;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

@@ -1,7 +1,8 @@
 import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { CreateTaskDto } from './create-task.dto';
 
-export class UpdateTaskDto {
+export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   @ApiPropertyOptional({
     example: 'Neue Überschrift',
     description: 'Optionaler neuer Titel für den Task',
